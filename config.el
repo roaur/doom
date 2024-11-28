@@ -83,15 +83,15 @@
 ;; they are implemented.
 
 ;; Installed packages:
-(require 'ejc-sql)
+;; (require 'ejc-sql)
 
-;; Set up ejc-sql
-(setq clomacs-httpd-default-port 8090)
+;; ;; Set up ejc-sql
+;; (setq clomacs-httpd-default-port 8090)
 
-;; Set up ejc-autocomplete
-(require 'ejc-autocomplete)
-(add-hook 'ejc-sql-minor-mode-hook (
-                                    lambda ()
-                                    (auto-complete-mode t)
-                                    (ejc-ac-setup)
-                                    ))
+;; ;; Set up ejc-autocomplete
+;; (require 'ejc-autocomplete)
+;; (add-hook 'ejc-sql-minor-mode-hook (
+;;                                     lambda ()
+;;                                     (auto-complete-mode t)
+;;                                     (ejc-ac-setup)
+;;                                     ))
