@@ -96,7 +96,6 @@
 ;;                                     (auto-complete-mode t)
 ;;                                     (ejc-ac-setup)
 ;;                                     ))
-
 (use-package! org-super-agenda
   :after org-agenda
   :init
