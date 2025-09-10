@@ -22,7 +22,7 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 28)
+(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 14)
       ;; doom-variable-pitch-font (font-spec :family "Fira Sans" :size 12)
       )
 ;;
@@ -97,22 +97,24 @@
 ;;                                     (auto-complete-mode t)
 ;;                                     (ejc-ac-setup)
 ;;                                     ))
-(use-package! org-super-agenda
-  :after org-agenda
-  :init
-  (setq org-super-agenda-groups '((:name "Today"
-                                   :time-grid t
-                                   :scheduled today)
-                                  (:name "Due today"
-                                   :Deadline today)
-                                  (:name "Important"
-                                   :priority "A")
-                                  (:name "Overdue"
-                                   :deadline past)
-                                  (:name "Due soon"
-                                   :deadline future)
-                                  (:name "Big Outcomes"
-                                   :tag "bo")))
-  :config
-  (org-super-agenda-mode)
-  )
+;; Import PATH/PYENV_ROOT from your shell (but not PYENV_VERSION)
+(when (memq window-system '(mac ns))
+  (after! exec-path-from-shell
+    (exec-path-from-shell-copy-envs '("PATH" "PYENV_ROOT"))))
+
+;; Auto-activate the correct Poetry venv per project
+(use-package! poetry
+  :hook (python-mode . poetry-tracking-mode))
+
+;; Make Flycheck use the project's mypy (inside .venv)
+(after! flycheck
+  (setq flycheck-python-mypy-executable
+        (expand-file-name ".venv/bin/mypy" (projectile-project-root))))
+
+;; LSP/Pyright: rely on the active venv; .venv is auto-detected by Pyright
+(after! lsp-pyright
+  (setq lsp-pyright-python-executable-cmd "python"))  ; from the active (Poetry) venv
+
+(setq
+ projectile-project-search-path '("~/git/")
+ )
