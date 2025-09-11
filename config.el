@@ -118,3 +118,6 @@
 (setq
  projectile-project-search-path '("~/git/")
  )
+
+;; Do not freeze per-project interpreter/venv into Doom's global env
+(setq doom-env-deny '("^PYENV_VERSION$" "^VIRTUAL_ENV$"))
