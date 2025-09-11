@@ -53,3 +53,4 @@
 (package! org-super-agenda)
 (package! exec-path-from-shell)
 (package! poetry)
+(package! lsp-pyright)
