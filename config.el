@@ -98,29 +98,60 @@
 ;;                                     (ejc-ac-setup)
 ;;                                     ))
 ;; Import PATH/PYENV_ROOT from your shell (but not PYENV_VERSION)
+;; Ensure PATH/PYENV_ROOT is imported (macOS)
 (when (memq window-system '(mac ns))
   (after! exec-path-from-shell
     (exec-path-from-shell-copy-envs '("PATH" "PYENV_ROOT"))))
 
-;; Auto-activate the correct Poetry venv per project
+;; Poetry: auto-track project venvs
 (use-package! poetry
   :hook (python-mode . poetry-tracking-mode))
 
-;; Make Flycheck use the project's mypy (inside .venv)
+;; Let lsp-mode use Pyright; rely on the active venv’s "python"
+(use-package! lsp-pyright
+  :after lsp-mode
+  :hook (python-mode . lsp-deferred)
+  :init
+  (setq lsp-disabled-clients '(pyls pylsp mspyls)) ; prefer pyright
+  :config
+  (setq lsp-pyright-python-executable-cmd "python")) ; comes from your Poetry/pyenv venv
+
+;; Flycheck: use project mypy if present
 (after! flycheck
   (setq flycheck-python-mypy-executable
         (expand-file-name ".venv/bin/mypy" (projectile-project-root))))
 
-;; LSP/Pyright: rely on the active venv; .venv is auto-detected by Pyright
-(after! lsp-pyright
-  (setq lsp-pyright-python-executable-cmd "python"))  ; from the active (Poetry) venv
-
-(setq
- projectile-project-search-path '("~/git/")
- )
-
-;; Do not freeze per-project interpreter/venv into Doom's global env
+;; Keep Doom from freezing a specific VENV into its global env
 (setq doom-env-deny '("^PYENV_VERSION$" "^VIRTUAL_ENV$"))
 
-(after! lsp-pyright
-  (setq lsp-pyright-langserver-command "pyright-langserver"))
+;; (use-package! drag_stuff
+;;   :config
+;;   (drag-stuff-global-mode 1) ; enable everywhere
+;;   ;; meta-arrow
+;;   (map!
+;;         :nv "M-<up>" #'drag-stuff-up
+;;         :nv "M-<down>" #'drag-stuff-down
+;;         ;; Visual mode:
+;;         :v "K" #'drag-stuff-up
+;;         :v "J" #'drag-stuff-down
+;;         )
+;;   )
+
+;; The key is stored in ~/.config/doom/.gptel-key so it is separate
+;; from your main config files. Make sure this file is in your .gitignore."
+;;   ;; Remove any whitespace or newline characters from the result.
+;;   (string-trim
+;;    ;; Create a temporary buffer, insert the file’s contents, then return it.
+;;    (with-temp-buffer
+;;      ;; Load the contents of the key file into the temp buffer.
+;;      (insert-file-contents "~/.config/doom/.gptel-key")
+;;      ;; Return everything as a string.
+;;      (buffer-string))))
+(map! :n "M-h" #'previous-buffer
+      :n "M-l" #'next-buffer)
+
+(after! lsp-ui
+  (setq lsp-ui-peek-enable t
+        lsp-ui-peek-always-show t
+        lsp-ui-peek-peek-height 20
+        lsp-ui-peek-list-width 50))
