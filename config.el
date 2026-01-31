@@ -155,3 +155,6 @@
         lsp-ui-peek-always-show t
         lsp-ui-peek-peek-height 20
         lsp-ui-peek-list-width 50))
+
+(setq fast-but-imprecise-scrolling t)
+(setq jit-lock-defer-time 0)

@@ -55,4 +55,6 @@
 (package! poetry)
 (package! lsp-pyright)
 ;; (package! drag_stuff)
-;;(package! gptel)
+(package! gptel)
+
+(package! tidal)
